@@ -19,10 +19,12 @@ import {
   ExclamationCircleIcon,
   Cog6ToothIcon,
   ClockIcon,
-  InformationCircleIcon
+  InformationCircleIcon,
+  MusicalNoteIcon
 } from '@heroicons/react/24/outline';
 
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwqJNte9iEsNvW_5CWwyxkdxYazw7nTQ_cH2W0GYQwqDDWFSReQII1xLXwXNSoxOfuGIA/exec";
+const LISTENING_URL = "https://www.hackers.co.kr/?c=s_toeic/toeic_study/dlc";
 
 const getTodayString = () => {
   const now = new Date();
@@ -37,7 +39,7 @@ const formatTime = (seconds: number) => {
 };
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'study' | 'test' | 'record' | 'settings'>('study');
+  const [activeTab, setActiveTab] = useState<'study' | 'test' | 'record' | 'settings' | 'listening'>('study');
   const [gasUrl, setGasUrl] = useState<string>(DEFAULT_GAS_URL);
   const [testMode, setTestMode] = useState<'none' | 'today' | 'cumulative'>('none');
   const [todayRecord, setTodayRecord] = useState<DailyRecord>({
@@ -297,14 +299,26 @@ const App: React.FC = () => {
         </h1>
       </header>
 
-      <nav className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 sticky top-4 z-50">
+      <nav className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 sticky top-4 z-50 overflow-x-auto">
         {[
           { id: 'study', icon: PencilSquareIcon, label: '기록' },
           { id: 'test', icon: ArrowPathIcon, label: '테스트' },
           { id: 'record', icon: MicrophoneIcon, label: '발음' },
+          { id: 'listening', icon: MusicalNoteIcon, label: '듣기' },
           { id: 'settings', icon: Cog6ToothIcon, label: '설정' }
         ].map(tab => (
-          <button key={tab.id} onClick={() => { setActiveTab(tab.id as any); setTestMode('none'); }} className={`flex-1 flex flex-col items-center py-3 rounded-xl transition-all ${activeTab === tab.id ? 'bg-indigo-50 text-indigo-600 shadow-inner' : 'text-slate-400'}`}>
+          <button 
+            key={tab.id} 
+            onClick={() => { 
+              if (tab.id === 'listening') {
+                window.open(LISTENING_URL, '_blank');
+              } else {
+                setActiveTab(tab.id as any); 
+                setTestMode('none'); 
+              }
+            }} 
+            className={`flex-1 min-w-[60px] flex flex-col items-center py-3 rounded-xl transition-all ${activeTab === tab.id ? 'bg-indigo-50 text-indigo-600 shadow-inner' : 'text-slate-400'}`}
+          >
             <tab.icon className="w-6 h-6" />
             <span className="text-[10px] mt-1 font-bold">{tab.label}</span>
           </button>
