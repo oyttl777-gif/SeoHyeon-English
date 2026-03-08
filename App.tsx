@@ -45,7 +45,7 @@ const App: React.FC = () => {
   const [todayRecord, setTodayRecord] = useState<DailyRecord>({
     date: getTodayString(),
     page: '',
-    words: Array(13).fill({ word: '', meaning: '' }),
+    words: Array(30).fill({ word: '', meaning: '' }),
     newsContent: '',
     isCompleted: false,
   });
@@ -103,10 +103,10 @@ const App: React.FC = () => {
             word: String(Array.isArray(item) ? item[2] : (item.영어단어 || item.word || "")).trim(),
             meaning: String(Array.isArray(item) ? item[3] : (item.의미 || item.meaning || "")).trim()
           }))
-          .filter(w => w.word.length > 0 && w.meaning.length > 0);
+          .filter((w: WordEntry) => w.word.length > 0 && w.meaning.length > 0);
         
         const uniqueMap = new Map();
-        parsedWords.forEach(w => uniqueMap.set(w.word.toLowerCase(), w));
+        parsedWords.forEach((w: WordEntry) => uniqueMap.set(w.word.toLowerCase(), w));
         setSheetWords(Array.from(uniqueMap.values()));
       }
     } catch (error: any) {
@@ -133,13 +133,13 @@ const App: React.FC = () => {
     const existing = currentHistory.find(r => r.date === dateStr);
     if (existing) {
       const paddedWords = [...existing.words];
-      while (paddedWords.length < 13) paddedWords.push({ word: '', meaning: '' });
+      while (paddedWords.length < 30) paddedWords.push({ word: '', meaning: '' });
       setTodayRecord({ ...existing, words: paddedWords });
     } else {
       setTodayRecord({
         date: dateStr,
         page: '',
-        words: Array(13).fill({ word: '', meaning: '' }),
+        words: Array(30).fill({ word: '', meaning: '' }),
         newsContent: '',
         isCompleted: false,
       });
@@ -353,7 +353,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-3">
-              <h3 className="font-bold text-slate-700">오늘의 단어 (13개)</h3>
+              <h3 className="font-bold text-slate-700">오늘의 단어 (30개)</h3>
               <div className="grid grid-cols-1 gap-2">
                 {todayRecord.words.map((w, idx) => (
                   <div key={idx} className="flex gap-2 items-center group">
